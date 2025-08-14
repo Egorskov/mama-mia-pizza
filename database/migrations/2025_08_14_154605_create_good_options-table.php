@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('good_id');
             $table->enum('type',['dough', 'board']);
             $table->string('name');
-            $table->decimal('price')->nullable();
+            $table->decimal('price',7,2)->nullable();
         });
     }
 

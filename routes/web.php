@@ -15,5 +15,5 @@ Route::get('/healthcheck', function () {
     return response()->json(['status' => 'ok']);
 });
 
-Route::apiResource('goods', GoodController::class);
+
 

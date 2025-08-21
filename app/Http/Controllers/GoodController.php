@@ -31,7 +31,7 @@ class GoodController extends Controller
 
         $good = Good::create($data);
 
-        return response()->json($good, 201);
+        return response()->json($good, 200);
     }
 
     /**
@@ -59,7 +59,7 @@ class GoodController extends Controller
         ]);
 
         $good -> update($data);
-        return response()->json($good, 'Good created successfully.');
+        return response()->json($good, 200);
 
     }
 
@@ -70,6 +70,6 @@ class GoodController extends Controller
     {
         $good = Good::findOrFail($id);
         $good->delete();
-        return response()->json(null, 'deleted');
+        return response()->json(['message' => 'Deleted successfully'], 204);
     }
 }

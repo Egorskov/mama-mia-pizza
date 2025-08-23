@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone_number')->unique();
+            $table->string('password');
             $table->date('birthday')->nullable();
+            $table->enum('admin', ['yes', 'no'])->default('no');
             $table->timestamps();
         });
     }

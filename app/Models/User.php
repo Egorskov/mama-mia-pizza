@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 //class User extends Authenticatable
-class User extends Model
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory;
+    use Notifiable;
     protected $fillable = [
         'first_name',
         'last_name',
@@ -33,4 +35,15 @@ class User extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function getJWTIdentifier()
+    {
+        // TODO: Implement getJWTIdentifier() method.
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        // TODO: Implement getJWTCustomClaims() method.
+        return [];
+    }
 }

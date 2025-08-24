@@ -20,7 +20,7 @@ class GoodController extends Controller
 
     public function store(CreateGoodRequest $request)
     {
-        return response()->json(Good::create($request->validated([])), 200);
+        return response()->json(Good::create($request->validated()), 200);
     }
 
     /**

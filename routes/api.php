@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoodController;
 use Illuminate\Http\Request;
@@ -11,6 +12,10 @@ use Illuminate\Http\Request;
 //});
 
 Route::apiResource('goods', GoodController::class);
+Route::middleware('auth:api')->group(function () {
+    Route::apiResource('orders', OrderController::class);
+    Route::post('orders/{order}/cancel', [OrderController::class, 'cancel']);
+});
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);

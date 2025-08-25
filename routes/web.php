@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoodController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,3 +14,6 @@ Route::get('/test', function () {
 Route::get('/healthcheck', function () {
     return response()->json(['status' => 'ok']);
 });
+
+
+

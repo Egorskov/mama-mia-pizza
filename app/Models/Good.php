@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Good extends Model
+{
+    use HasFactory;
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'weight',
+        'category'
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+    ];
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'good_id');
+    }
+
+    public function options()
+    {
+        return $this->hasMany(GoodOption::class, 'good_id');
+    }
+}

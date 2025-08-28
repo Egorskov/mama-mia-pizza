@@ -6,12 +6,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoodController;
 use Illuminate\Http\Request;
 
-//Route::middleware('api')->group(function () {
-//    Route::post('/goods', [GoodController::class, 'store']);
-//    Route::get('/goods', [GoodController::class, 'index']);
-//});
 
-Route::apiResource('goods', GoodController::class);
+Route::get('goods', [GoodController::class, 'index']);
+Route::get('goods/{id}', [GoodController::class, 'show']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('goods', [GoodController::class, 'store']);
+    Route::put('goods/{id}', [GoodController::class, 'update']);
+    Route::delete('goods/{id}', [GoodController::class, 'destroy']);
+});
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('orders', OrderController::class);
@@ -19,10 +22,10 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
-    Route::get('orders', [OrderController::class, 'adminIndex']);
-    Route::get('orders/{order}', [OrderController::class, 'adminOrder']);
-    Route::get('id/{id}', [OrderController::class, 'adminId']);
-    Route::patch('update/{order}', [OrderController::class, 'adminUpdate']);
+    Route::get('orders', [\App\Http\Controllers\AdminController::class, 'adminIndex']);
+    Route::get('orders/{order}', [\App\Http\Controllers\AdminController::class, 'adminOrder']);
+    Route::get('id/{id}', [\App\Http\Controllers\AdminController::class, 'adminId']);
+    Route::patch('update/{order}', [\App\Http\Controllers\AdminController::class, 'adminUpdate']);
 });
 
 Route::prefix('auth')->group(function () {

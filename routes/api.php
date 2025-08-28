@@ -12,9 +12,17 @@ use Illuminate\Http\Request;
 //});
 
 Route::apiResource('goods', GoodController::class);
+
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::post('orders/{order}/cancel', [OrderController::class, 'cancel']);
+});
+
+Route::prefix('admin')->middleware('auth:api')->group(function () {
+    Route::get('orders', [OrderController::class, 'adminIndex']);
+    Route::get('orders/{order}', [OrderController::class, 'adminOrder']);
+    Route::get('id/{id}', [OrderController::class, 'adminId']);
+    Route::patch('update/{order}', [OrderController::class, 'adminUpdate']);
 });
 
 Route::prefix('auth')->group(function () {

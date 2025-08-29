@@ -28,17 +28,24 @@ class OrderController extends Controller
 
     public function store(CreateOrderRequest $request)
     {
-        $validated = $request->validated();
-        $order = Order::create([
-            'user_id' => auth()->user()->id,
-            'user_address_id' => $validated->user_address_id,
-            'delivery_time' => $validated->delivery_time,
-        ]);
-        $this->extracted($validated, $order);
+        try{
+            $validated = $request->validated();
+            $order = Order::create([
+                'user_id' => auth()->user()->id,
+                'user_address_id' => $validated['user_address_id'],
+                'delivery_time' => $validated['delivery_time'],
+            ]);
+            $this->extracted($validated, $order);
 
-        return response()->json(['message' => 'Order created successfully',
-            'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
-        ], 201);
+            return response()->json(['message' => 'Order created successfully',
+                'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
+            ], 201);
+        }
+        catch (\Exception $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 422);
+        }
     }
 
     public function show(Order $order)

@@ -64,14 +64,20 @@ class AdminController extends Controller
         if(isset($validated['delivery_status'])){
             $updateData['delivery_status'] = $validated['delivery_status'];
         }
-        $order->update($updateData);
-        if(isset($validated['items'])){
-            OrderItem::where('order_id', $order->id)->delete();
-            $this->extracted($validated, $order);
+        try {
+            $order->update($updateData);
+            if(isset($validated['items'])){
+                OrderItem::where('order_id', $order->id)->delete();
+                $this->extracted($validated, $order);
+            }
+            return response()->json(['message' => 'Order update successfully',
+                'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
+            ], 200);
         }
-        return response()->json(['message' => 'Order update successfully',
-            'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
-        ], 200);
-
+        catch (\Exception $exception){
+            return response()->json([
+                'message' => $exception->getMessage()
+            ], 422);
+        }
     }
 }

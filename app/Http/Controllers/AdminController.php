@@ -21,7 +21,7 @@ class AdminController extends Controller
     {
         $order = Order::with(['user', 'items.good', 'items.goodOption', 'user_address'])
             ->get();
-        return response()->json($order);
+        return response()->json($order, 200);
     }
 
     /**
@@ -31,7 +31,7 @@ class AdminController extends Controller
     {
         $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
             ->findOrFail($order->id);
-        return response()->json($order);
+        return response()->json($order, 200);
     }
 
     /**
@@ -43,7 +43,7 @@ class AdminController extends Controller
         $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
             ->where('user_id', $id)
             ->get();
-        return response()->json($order);
+        return response()->json($order, 200);
     }
 
     /**

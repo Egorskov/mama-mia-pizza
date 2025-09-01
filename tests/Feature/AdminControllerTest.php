@@ -58,21 +58,21 @@ class AdminControllerTest extends TestCase
         ];
 
     }
-    public function test_index_200(): void
+    public function testAdminOrderIndexExpectHttpOkAndShowAllOrdersOfAllUsers(): void
     {
         $response = $this->withHeaders($this->adminHeader)
             ->getJson('/api/admin/orders');
         $response->assertStatus(200);
     }
 
-    public function test_index_401(): void
+    public function testAdminOrderIndexExpectHttpUnauthenticated(): void
     {
         $response = $this->withHeaders($this->userHeader)
             ->getJson('/api/admin/orders');
         $response->assertStatus(401);
     }
 
-    public function test_order_200(): void
+    public function testAdminOrderShowExpectHttpOkAndShowOrdersWithId(): void
     {
         $order = Order::factory()->create();
         $id = $order->id;
@@ -81,7 +81,7 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_order_401(): void
+    public function testAdminOrderShowExpectHttpUnauthenticated(): void
     {
         $order = Order::factory()->create();
         $order_id = $order->id;
@@ -90,7 +90,7 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_id_200(): void
+    public function testAdminUsersOrdersShowExpectHttpOkAndShowUsersOrdersWithUser_Id(): void
     {
         $user_id = $this->user->id;
         $response = $this->withHeaders($this->adminHeader)
@@ -98,7 +98,7 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_id_401(): void
+    public function testAdminUsersOrdersShowExpectHttpUnauthenticated(): void
     {
         $user_id = $this->user->id;
         $response = $this->withHeaders($this->userHeader)
@@ -106,7 +106,7 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_update_200(): void
+    public function testAdminUpdateOrderExpectHttpOkAndUpdatedOrderWithId(): void
     {
         $order = $this->order->first();
         $good = Good::factory()->create();
@@ -135,7 +135,7 @@ class AdminControllerTest extends TestCase
             ]);
     }
 
-    public function test_update_422(): void
+    public function testAdminUpdateOrderExpectHttpInvalidData(): void
     {
         $order = $this->order->first();
         $good = Good::factory()->create();
@@ -153,7 +153,7 @@ class AdminControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_update_401(): void
+    public function testAdminUpdateOrderExpectHttpUnauthenticated(): void
     {
         $order = $this->order->first();
         $good = Good::factory()->create();

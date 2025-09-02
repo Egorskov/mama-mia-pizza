@@ -32,4 +32,38 @@ class Good extends Model
     {
         return $this->hasMany(GoodOption::class, 'good_id');
     }
+
+    public static function getAllGoods()
+    {
+        return self::all();
+    }
+
+    public static function createGood(array $data)
+    {
+        return self::create($data);
+    }
+
+    public function updateGood($data): bool
+    {
+        return $this->update($data);
+    }
+
+    public function deleteGood(): bool
+    {
+        return self::delete();
+    }
+
+    public static function validateUpdateGood($data)
+    {
+        return $data ->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required|min:0',
+            'weight' => 'required|integer|min:0',
+            'category' => 'required|in:pizza,drink',
+        ]);
+    }
+
+
+
 }

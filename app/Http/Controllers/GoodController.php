@@ -7,6 +7,7 @@ use App\Http\Requests\CreateGoodRequest;
 use App\Models\Good;
 use Illuminate\Http\Request;
 
+
 class GoodController extends Controller
 {
     public function __construct()
@@ -19,13 +20,13 @@ class GoodController extends Controller
      */
     public function index()
     {
-        $goods = Good::all();
+        $goods = Good::getAllGoods();
         return response()->json($goods);
     }
 
     public function store(CreateGoodRequest $request)
     {
-        return response()->json(Good::create($request->validated()), 200);
+        return response()->json(Good::createGood($request->validated()), 200);
     }
 
     /**
@@ -41,15 +42,8 @@ class GoodController extends Controller
     public function update(Request $request, string $id)
     {
         $good = Good::findOrFail($id);
-        $data = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|min:0',
-            'weight' => 'required|integer|min:0',
-            'category' => 'required|in:pizza,drink',
-        ]);
-
-        $good -> update($data);
+        $data = Good::validateUpdateGood($request);
+        $good -> updateGood($data);
         return response()->json($good, 200);
 
     }
@@ -60,7 +54,7 @@ class GoodController extends Controller
     public function destroy(string $id)
     {
         $good = Good::findOrFail($id);
-        $good->delete();
+        $good->deleteGood();
 
         return response()->json(['message' => 'Deleted successfully'], 200);
     }

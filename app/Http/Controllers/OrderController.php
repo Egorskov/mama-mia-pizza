@@ -20,22 +20,16 @@ class OrderController extends Controller
 
     public function index()
     {
-        $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
-            ->where('user_id', auth()->user()->id)
-            ->get();
-        return response()->json($order);
+        $orders = Order::getAllOrders();
+        return response()->json($orders);
     }
 
     public function store(CreateOrderRequest $request)
     {
         try{
             $validated = $request->validated();
-            $order = Order::create([
-                'user_id' => auth()->user()->id,
-                'user_address_id' => $validated['user_address_id'],
-                'delivery_time' => $validated['delivery_time'],
-            ]);
-            $this->extracted($validated, $order);
+            $order = Order::createOrder($validated);
+            $order->extracted($validated, $order);
 
             return response()->json(['message' => 'Order created successfully',
                 'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
@@ -50,29 +44,30 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
-            ->where('user_id', auth()->user()->id)
-            ->findOrFail($order->id);
+        $order = Order::showOrder($order);
         return response()->json($order);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function cancel(Order $order)
     {
-        $order = Order::where('user_id', auth()->user()->id)
-            ->findOrFail($order->id);
-        if($order->delivery_status !== 'pending'){
-            return response()->json([
-                'message' => 'Cannot cancel order status -'
-                    . $order->delivery_status . '. Please, call Alex Shevchenko'
-            ], 400);
-        }
-        $order->update(['delivery_status' => 'cancelled']);
+       try {
+           $order = Order::where('user_id', auth()->user()->id)
+               ->findOrFail($order->id);
+           $order = $order->cancelOrder($order);
 
-        return response()->json([
-            'message' => 'Order successful canceled',
-            'order'=>$order
-        ], 201);
-
+           return response()->json([
+               'message' => 'Order successful canceled',
+               'order' => $order
+           ], 201);
+       }
+       catch (\Exception $exception){
+           return response()->json([
+               'message' => $exception->getMessage()
+           ], 400);
+       }
     }
 
 }

@@ -24,4 +24,5 @@ class GoodOptionFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 100),
         ];
     }
+
 }

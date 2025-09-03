@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tymon\JWTAuth\Providers\Auth\Illuminate;
 
 class Good extends Model
 {
@@ -23,22 +25,22 @@ class Good extends Model
         'price' => 'decimal:2',
     ];
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class, 'good_id');
     }
 
-    public function options()
+    public function options(): HasMany
     {
         return $this->hasMany(GoodOption::class, 'good_id');
     }
 
-    public static function getAllGoods()
+    public static function getAllGoods(): \Illuminate\Database\Eloquent\Collection
     {
         return self::all();
     }
 
-    public static function createGood(array $data)
+    public static function createGood(array $data): Good
     {
         return self::create($data);
     }
@@ -50,10 +52,10 @@ class Good extends Model
 
     public function deleteGood(): bool
     {
-        return self::delete();
+        return $this->delete();
     }
 
-    public static function validateUpdateGood($data)
+    public static function validateUpdateGood($data): array
     {
         return $data ->validate([
             'name' => 'required',
@@ -63,7 +65,5 @@ class Good extends Model
             'category' => 'required|in:pizza,drink',
         ]);
     }
-
-
 
 }

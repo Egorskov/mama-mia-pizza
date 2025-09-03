@@ -8,6 +8,7 @@ use App\Models\Good;
 use App\Models\GoodOption;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -18,13 +19,13 @@ class OrderController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
         $orders = Order::getAllOrders();
         return response()->json($orders);
     }
 
-    public function store(CreateOrderRequest $request)
+    public function store(CreateOrderRequest $request): JsonResponse
     {
         try{
             $validated = $request->validated();
@@ -42,7 +43,7 @@ class OrderController extends Controller
         }
     }
 
-    public function show(Order $order)
+    public function show(Order $order): JsonResponse
     {
         $order = Order::showOrder($order);
         return response()->json($order);
@@ -51,7 +52,7 @@ class OrderController extends Controller
     /**
      * @throws \Exception
      */
-    public function cancel(Order $order)
+    public function cancel(Order $order): JsonResponse
     {
        try {
            $order = Order::where('user_id', auth()->user()->id)

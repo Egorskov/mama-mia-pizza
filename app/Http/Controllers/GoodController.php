@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\SomeThingWentWrongException;
 use App\Http\Requests\CreateGoodRequest;
 use App\Models\Good;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
@@ -18,13 +19,13 @@ class GoodController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $goods = Good::getAllGoods();
         return response()->json($goods);
     }
 
-    public function store(CreateGoodRequest $request)
+    public function store(CreateGoodRequest $request): JsonResponse
     {
         return response()->json(Good::createGood($request->validated()), 200);
     }
@@ -32,14 +33,14 @@ class GoodController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         return response()->json(Good::findOrFail($id));
     }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
         $good = Good::findOrFail($id);
         $data = Good::validateUpdateGood($request);
@@ -51,11 +52,12 @@ class GoodController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         $good = Good::findOrFail($id);
         $good->deleteGood();
 
         return response()->json(['message' => 'Deleted successfully'], 200);
     }
+
 }

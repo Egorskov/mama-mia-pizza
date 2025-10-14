@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('good_id');
             $table->integer('quantity');
             $table->foreignId('good_option_id')
-                ->nullable()->constrained('good_option');
+                ->nullable()->constrained('good_options');
             $table->decimal('base_price', 7, 2)->default(0);
             $table->decimal('option_price', 7, 2)->default(0);
             $table->decimal('total_price', 7, 2)->default(0);

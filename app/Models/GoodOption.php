@@ -9,6 +9,8 @@ class GoodOption extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'good_id',
         'type',

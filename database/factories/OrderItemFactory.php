@@ -19,18 +19,21 @@ class OrderItemFactory extends Factory
      */
     public function definition(): array
     {
-        $good = Good::query()->inRandomOrder()->first();
-        $option = $good->options()->inRandomOrder()->first();
+        $good = Good::with('options')->inRandomOrder()->first();
+        $option = $good->options->isNotEmpty() ? $good->options->random() : null;
+
+        $basePrice = $good->price;
+        $optionPrice = $option ? $option->price : 0;
+        $quantity = fake()->numberBetween(1, 10);
+
         return [
             'order_id' => Order::factory(),
             'good_id' => $good->id,
-            'quantity' => fake()->numberBetween(1, 10),
-            'good_option_id' => $option ? $option->id : null,
-            'base_price' => $good->price,
-            'total_price' => function (array $price) {
-                return ($price['base_price'] + $price['option_price'])
-                    * $price['quantity'];
-            }
+            'good_option_id' => $option?->id,
+            'quantity' => $quantity,
+            'base_price' => $basePrice,
+            'option_price' => $optionPrice,
+            'total_price' => ($basePrice + $optionPrice) * $quantity
         ];
     }
 }

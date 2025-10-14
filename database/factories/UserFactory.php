@@ -19,7 +19,7 @@ class UserFactory extends Factory
             'last_name' => fake()->name(),
             'phone_number' => '+7' . fake()->numerify('##########'),
             'birthday' => fake()->date(),
-            'admin' => fake()->randomElement(['yes', 'no']),
+            'admin' => 'no'
         ];
     }
 

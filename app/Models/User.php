@@ -24,7 +24,7 @@ class User extends Model
     ];
 
     public function addresses(){
-        return $this->hasMany(UserAddress::class);
+        return $this->hasMany(UserAddress::class, 'user_id');
     }
 
     public function orders(){

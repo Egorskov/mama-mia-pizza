@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Exceptions\SomeThingWentWrongException;
+use App\Http\Requests\CreateGoodRequest;
 use App\Models\Good;
+use Illuminate\Http\Request;
 
 class GoodController extends Controller
 {
@@ -16,22 +18,9 @@ class GoodController extends Controller
         return response()->json($goods);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(CreateGoodRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|min:0',
-            'weight' => 'required|integer|min:0',
-            'category' => 'required|in:pizza,drink',
-        ]);
-
-        $good = Good::create($data);
-
-        return response()->json($good, 200);
+        return response()->json(Good::create($request->validated([])), 200);
     }
 
     /**
@@ -39,17 +28,14 @@ class GoodController extends Controller
      */
     public function show(string $id)
     {
-        $good = Good::findOrFail($id);
-        return response()->json($good);
+        return response()->json(Good::findOrFail($id));
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
         $good = Good::findOrFail($id);
-
         $data = $request->validate([
             'name' => 'required',
             'description' => 'required',
@@ -70,6 +56,7 @@ class GoodController extends Controller
     {
         $good = Good::findOrFail($id);
         $good->delete();
+
         return response()->json(['message' => 'Deleted successfully'], 204);
     }
 }

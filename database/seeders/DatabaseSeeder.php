@@ -10,6 +10,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserAddress;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -73,6 +74,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Admin',
             'last_name' => 'Adminov',
             'phone_number' => '+79999999999',
+            'password' => Hash::make('password'),
             'birthday' => '1990-01-01',
             'admin' => 'yes'
         ]);
@@ -88,13 +90,6 @@ class DatabaseSeeder extends Seeder
                     'user_id' => $user->id
                 ]);
         });
-
-//        $users->each(function ($user) {
-//            Order::factory()
-//                ->count(rand(1, 10))->create([
-//                    'user_id' => $user->id
-//                ]);
-//        });
 
         $orders = collect([]);
         $users->each(function ($user) use (&$orders) {

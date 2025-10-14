@@ -29,10 +29,9 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // ДОБАВЬТЕ ЭТОТ МЕТОД - он гарантированно сработает
     public function render($request, Throwable $e)
     {
-        // Принудительно обрабатываем ваше исключение
+
         if ($e instanceof SomeThingWentWrongException) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -41,7 +40,6 @@ class Handler extends ExceptionHandler
             ], 500);
         }
 
-        // Для всех других исключений - стандартное поведение
         return parent::render($request, $e);
     }
 }

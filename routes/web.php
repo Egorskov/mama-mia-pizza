@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return ['data'=>'hello world'];
 });
+
+Route::get('/healthcheck', function () {
+    return response()->json(['status' => 'ok']);
+});

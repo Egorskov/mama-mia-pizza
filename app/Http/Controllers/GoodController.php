@@ -13,15 +13,7 @@ class GoodController extends Controller
     public function index()
     {
         $goods = Good::all();
-        return view('goods.index', compact('goods'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('goods.create');
+        return response()->json($goods);
     }
 
     /**
@@ -36,9 +28,10 @@ class GoodController extends Controller
             'weight' => 'required|integer|min:0',
             'category' => 'required|in:pizza,drink',
         ]);
-        Good::create($data);
-        return redirect()->route('goods.index')
-            ->with('success', 'Good created successfully.');
+
+        $good = Good::create($data);
+
+        return response()->json($good, 201);
     }
 
     /**
@@ -47,16 +40,7 @@ class GoodController extends Controller
     public function show(string $id)
     {
         $good = Good::findOrFail($id);
-        return view('goods.show', compact('good'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $good = Good::findOrFail($id);
-        return view('goods.edit', compact('good'));
+        return response()->json($good);
     }
 
     /**
@@ -75,8 +59,7 @@ class GoodController extends Controller
         ]);
 
         $good -> update($data);
-        return redirect()->route('goods.index')
-            ->with('success', 'Good created successfully.');
+        return response()->json($good, 'Good created successfully.');
 
     }
 
@@ -86,8 +69,7 @@ class GoodController extends Controller
     public function destroy(string $id)
     {
         $good = Good::findOrFail($id);
-        $good -> delete();
-        return redirect()->route('goods.index')
-            ->with('success', 'Good deleted successfully.');
+        $good->delete();
+        return response()->json(null, 'deleted');
     }
 }

@@ -16,7 +16,8 @@ class User extends Model
         'last_name',
         'phone_number',
         'birthday',
-        'admin'
+        'admin',
+        'delivery_status'
     ];
 
     protected $attributes = [

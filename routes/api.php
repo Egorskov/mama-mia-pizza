@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoodController;
 use Illuminate\Http\Request;
@@ -36,4 +37,18 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
     });
+});
+Route::get('/internal/orders/{order}', function (Order $order) {
+    $order->load(['items.good', 'user']);
+
+    return response()->json([
+        'id' => $order->id,
+        'user_email' => $order->user?->email,
+        'total_price' => $order->items->sum('total_price'), // 👈 сумма заказа
+        'items' => $order->items->map(fn($item) => [
+            'good_name' => $item->good?->name ?? 'Товар',
+            'quantity' => $item->quantity,
+            'total_price' => $item->total_price,
+        ]),
+    ]);
 });

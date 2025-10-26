@@ -23,6 +23,8 @@ services:
             - sail
         depends_on:
             - pgsql
+            - redis
+            - rabbitmq
     pgsql:
         image: 'postgres:17'
         ports:
@@ -43,9 +45,30 @@ services:
             test: ["CMD", "pg_isready", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
             retries: 3
             timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'sailredis:/data'
+        networks:
+            - sail
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: pizzeria_rabbitmq
+        ports:
+            - "5672:5672"    # основной порт для очередей
+            - "15672:15672"  # панель управления
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
 volumes:
     sail-pgsql:
+        driver: local
+    sailredis:
         driver: local

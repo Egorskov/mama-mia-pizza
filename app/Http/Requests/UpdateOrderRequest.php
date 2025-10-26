@@ -22,7 +22,7 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_address_id' => 'sometimes|required|ts:user_addresses,id',
+            'user_address_id' => 'sometimes|required|exists:user_addresses,id',
             'delivery_time' => 'sometimes|required|date',
             'delivery_status' => 'sometimes|required|string',
             'items' => 'sometimes|required|array|min:1',

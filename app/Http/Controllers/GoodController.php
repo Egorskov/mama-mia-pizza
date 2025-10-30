@@ -62,6 +62,6 @@ class GoodController extends Controller
         $good = Good::findOrFail($id);
         $good->delete();
 
-        return response()->json(['message' => 'Deleted successfully'], 204);
+        return response()->json(['message' => 'Deleted successfully'], 200);
     }
 }

@@ -32,7 +32,8 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = $request->only('phone_number', 'password');
         if(!$token = auth('api')->attempt($credentials)){
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -40,7 +41,8 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function user(Request $request){
+    public function user(Request $request)
+    {
         return response()->json(auth('api')->user());
     }
 
@@ -52,7 +54,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function refresh(){
+    public function refresh()
+    {
         return $this->respondWithToken(auth('api')->refresh());
     }
 

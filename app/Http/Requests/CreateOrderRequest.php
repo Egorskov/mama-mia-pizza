@@ -24,6 +24,7 @@ class CreateOrderRequest extends FormRequest
         return [
             'user_address_id' => 'required|exists:user_addresses,id',
             'delivery_time' => 'required|date',
+            'delivery_status' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.good_id' => 'required|exists:goods,id',
             'items.*.quantity' => 'required|integer|min:1',

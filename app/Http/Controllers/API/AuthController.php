@@ -3,14 +3,33 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['login']);
+        $this->middleware('auth:api')->except(['login', 'register']);
+    }
+
+    public function register(CreateUserRequest $request)
+    {
+        $validated = $request->validated();
+        $validated['password'] = Hash::make($validated['password']);
+
+        $user = User::create($validated);
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'token' => $token,
+            'user' => $user
+        ], 201);
     }
 
     public function login(Request $request){

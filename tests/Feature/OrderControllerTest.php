@@ -52,7 +52,7 @@ class OrderControllerTest extends TestCase
  //       $this->userNotAuth = User::factory()->create();
     }
 
-    public function test_order_index_200(): void
+    public function testUserOrderIndexExpectHttpOkAndShowAllUserOrders(): void
     {
         $response = $this->withHeaders($this->userHeader)
             ->getJson('/api/orders');
@@ -60,13 +60,13 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_order_index_401(): void
+    public function testOrderIndexExpectHttpUnauthenticated(): void
     {
         $response = $this->getJson('/api/orders');
         $response->assertStatus(401);
     }
 
-    public function test_order_show_200(): void
+    public function testUserShowOrderExpectHttpOkAndShowUserOrderWithId(): void
     {
         $order = $this->order->first();
         $response = $this->withHeaders($this->userHeader)
@@ -74,13 +74,13 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_order_show_401(): void
+    public function testShowOrderExpectHttpUnauthenticated(): void
     {
         $response = $this->getJson('/api/orders/1');
         $response->assertStatus(401);
     }
 
-    public function test_order_create_200(): void
+    public function testUserCreateOrderExpectHttpOkAndShowUserOrderWithId(): void
     {
         $good = Good::factory()->create();
         $request = [
@@ -100,7 +100,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_order_create_422(): void
+    public function testUserCreateOrderExpectHttpInvalidData(): void
     {
         $good = Good::factory()->create();
         $request = [
@@ -119,7 +119,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_order_create_401(): void
+    public function testUserCreateOrderExpectHttpUnauthenticated(): void
     {
         $good = Good::factory()->create();
         $request = [
@@ -138,7 +138,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_cancel_201(): void
+    public function testUserCancelOrderOrderExpectHttpOkAndCancelledOrder(): void
     {
         $order = Order::factory()->create([
             'user_id' => $this->user->id,
@@ -149,7 +149,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_cancel_400(): void
+    public function testUserCancelOrderOrderExpectHttpBadRequest(): void
     {
         $order = Order::factory()->create([
             'user_id' => $this->user->id,
@@ -160,7 +160,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(400);
     }
 
-    public function test_cancel_401(): void
+    public function testUserCancelOrderOrderExpectHttpUnauthenticated(): void
     {
         $order = Order::factory()->create([
             'user_id' => $this->user->id,

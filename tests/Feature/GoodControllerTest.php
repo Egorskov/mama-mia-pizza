@@ -38,27 +38,27 @@ class GoodControllerTest extends TestCase
         ];
     }
 
-    public function test_good_index_200(): void
+    public function testGoodIndexExpectHttpOkAndShowAllGoods(): void
     {
         $response = $this->getJson('/api/goods');
 
         $response->assertStatus(200);
     }
 
-    public function test_good_show_200(): void
+    public function testGoodShowExpectHttpOkAndShowGoodWithId(): void
     {
         $good = Good::factory()->create();
         $response = $this->getJson("/api/goods/{$good->id}");
         $response->assertStatus(200);
     }
 
-    public function test_good_show_404(): void
+    public function testGoodShowExpectHttpUnauthenticated(): void
     {
         $response = $this->getJson("/api/goods/9999");
         $response->assertStatus(404);
     }
 
-    public function test_good_store_200(): void
+    public function testAdminCreateGoodExpectHttpOkAndCreateGood(): void
     {
         $good = [
             'name' => 'Test Good',
@@ -77,7 +77,7 @@ class GoodControllerTest extends TestCase
             ]);
     }
 
-    public function test_good_store_401(): void
+    public function testUserCreateGoodExpectHttpUnauthenticated(): void
     {
         $good = [
             'name' => 'Test Good',
@@ -92,7 +92,7 @@ class GoodControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_good_update_200(): void
+    public function testAdminUpdateGoodExpectHttpOkAndGoodUpdated(): void
     {
         $good = Good::factory()->create();
         $id = $good->id;
@@ -109,7 +109,7 @@ class GoodControllerTest extends TestCase
             ->assertJson($request);
     }
 
-    public function test_good_update_401(): void
+    public function testUserUpdateGoodExpectHttpUnauthenticated(): void
     {
         $good = Good::factory()->create();
         $id = $good->id;
@@ -125,7 +125,7 @@ class GoodControllerTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_good_destroy_200(): void
+    public function testAdminDeleteGoodExpectHttpOkAndDeleteGood(): void
     {
         $good = Good::factory()->create();
         $id = $good->id;
@@ -133,5 +133,14 @@ class GoodControllerTest extends TestCase
             ->deleteJson("/api/goods/{$id}");
         $response->assertStatus(200)
             ->assertJson(['message' => 'Deleted successfully']);
+    }
+
+    public function testUserDeleteGoodExpectHttpUnauthenticated(): void
+    {
+        $good = Good::factory()->create();
+        $id = $good->id;
+        $response = $this->withHeaders($this->userHeader)
+            ->deleteJson("/api/goods/{$id}");
+        $response->assertStatus(401);
     }
 }

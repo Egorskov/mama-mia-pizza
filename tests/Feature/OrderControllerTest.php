@@ -49,7 +49,7 @@ class OrderControllerTest extends TestCase
                 ]);
         });
 
-        $this->userNotAuth = User::factory()->create();
+ //       $this->userNotAuth = User::factory()->create();
     }
 
     public function test_order_index_200(): void

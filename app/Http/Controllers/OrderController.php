@@ -39,7 +39,7 @@ class OrderController extends Controller
 
             return response()->json(['message' => 'Order created successfully',
                 'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])
-            ], 201);
+            ], 200);
         }
         catch (\Exception $exception){
             return response()->json([

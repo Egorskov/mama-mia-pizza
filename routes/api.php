@@ -8,7 +8,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoodController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\MenuController;
+use App\Http\Controllers\API\MenuController;
 
 Route::get('goods', [GoodController::class, 'index']);
 Route::get('goods/{id}', [GoodController::class, 'show']);
@@ -54,7 +54,8 @@ Route::get('/internal/orders/{order}', function (Order $order) {
         ]),
     ]);
 });
-
+Route::get('/ping', [MenuController::class, 'ping']);
+Route::get('/v1/menu/all', [MenuController::class, 'getMenu']);
 Route::get('/v1/menu/naive', [MenuController::class, 'naive']);
 Route::get('/v1/menu', [MenuController::class, 'filter']);
 Route::get('/v1/items/{id}', [MenuController::class, 'show']);

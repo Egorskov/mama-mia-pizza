@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
 
         if ($e instanceof SomeThingWentWrongException) {

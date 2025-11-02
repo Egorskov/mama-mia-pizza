@@ -67,6 +67,46 @@ class Order extends Model
         return $this;
     }
 
+    public static function getAllOrdersAllUsers()
+    {
+        return self::with(['user', 'items.good', 'items.goodOption', 'user_address'])
+            ->get();
+    }
+
+    public static function getOrdersWithId($order)
+    {
+        return self::with(['items.good', 'items.goodOption', 'user_address'])
+            ->findOrFail($order->id);
+    }
+
+    public static function getOrderById($orderId)
+    {
+        return self::with(['items.good', 'items.goodOption', 'user_address'])
+        ->where('user_id', $orderId)
+        ->get();
+    }
+
+    public function updateOrderByAdmin($validated):array
+    {
+        $updateData = [];
+
+        if(isset($validated['user_address_id'])){
+            $updateData['user_address_id'] = $validated['user_address_id'];
+        }
+        if(isset($validated['delivery_time'])){
+            $updateData['delivery_time'] = $validated['delivery_time'];
+        }
+        if(isset($validated['delivery_status'])){
+            $updateData['delivery_status'] = $validated['delivery_status'];
+        }
+        return $updateData;
+    }
+
+    public static function deleteOrdersItem($order)
+    {
+        return OrderItem::where('order_id', $order->id)->delete();
+    }
+
     public function extracted(mixed $validated, Order $order): void
     {
         $totalAmount = 0;

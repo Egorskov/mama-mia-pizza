@@ -19,9 +19,8 @@ class AdminController extends Controller
 
     public function adminIndex()
     {
-        $order = Order::with(['user', 'items.good', 'items.goodOption', 'user_address'])
-            ->get();
-        return response()->json($order, 200);
+        $orders = Order::getAllOrdersAllUsers();
+        return response()->json($orders, 200);
     }
 
     /**
@@ -29,8 +28,7 @@ class AdminController extends Controller
      */
     public function adminOrder(Order $order)
     {
-        $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
-            ->findOrFail($order->id);
+        $order = Order::getOrdersWithId($order);
         return response()->json($order, 200);
     }
 
@@ -38,11 +36,9 @@ class AdminController extends Controller
      *  Просмотр заказов любого пользователя админом
      */
 
-    public function adminId($id)
+    public function adminId($orderId)
     {
-        $order = Order::with(['items.good', 'items.goodOption', 'user_address'])
-            ->where('user_id', $id)
-            ->get();
+        $order = Order::getOrderById($orderId);
         return response()->json($order, 200);
     }
 
@@ -53,22 +49,12 @@ class AdminController extends Controller
     public function adminUpdate(UpdateOrderRequest $request, Order $order)
     {
         $validated = $request->validated();
-        $updateData = [];
 
-        if(isset($validated['user_address_id'])){
-            $updateData['user_address_id'] = $validated['user_address_id'];
-        }
-        if(isset($validated['delivery_time'])){
-            $updateData['delivery_time'] = $validated['delivery_time'];
-        }
-        if(isset($validated['delivery_status'])){
-            $updateData['delivery_status'] = $validated['delivery_status'];
-        }
         try {
-            $order->update($updateData);
+            $order->updateOrderByAdmin($validated);
             if(isset($validated['items'])){
-                OrderItem::where('order_id', $order->id)->delete();
-                $this->extracted($validated, $order);
+                Order::deleteOrdersItem($order);
+                $order->extracted($validated, $order);
             }
             return response()->json(['message' => 'Order update successfully',
                 'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -16,29 +18,29 @@ class Order extends Model
         'delivery_status'
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function user_address()
+    public function user_address(): BelongsTo
     {
         return $this->belongsTo(UserAddress::class, 'user_address_id');
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public static function getAllOrders()
+    public static function getAllOrders(): \Illuminate\Database\Eloquent\Collection
     {
         return self::with(['items.good', 'items.goodOption', 'user_address'])
             ->where('user_id', auth()->user()->id)
             ->get();
     }
 
-    public static function createOrder($validated)
+    public static function createOrder($validated): Order
     {
         return self::create([
             'user_id' => auth()->user()->id,
@@ -47,7 +49,7 @@ class Order extends Model
         ]);
     }
 
-    public static function showOrder($order)
+    public static function showOrder($order): Order
     {
         return self::with(['items.good', 'items.goodOption', 'user_address'])
             ->where('user_id', auth()->user()->id)
@@ -67,26 +69,26 @@ class Order extends Model
         return $this;
     }
 
-    public static function getAllOrdersAllUsers()
+    public static function getAllOrdersAllUsers(): \Illuminate\Database\Eloquent\Collection
     {
         return self::with(['user', 'items.good', 'items.goodOption', 'user_address'])
             ->get();
     }
 
-    public static function getOrdersWithId($order)
+    public static function getOrdersWithId($order): Order
     {
         return self::with(['items.good', 'items.goodOption', 'user_address'])
             ->findOrFail($order->id);
     }
 
-    public static function getOrderById($orderId)
+    public static function getOrderById($orderId): \Illuminate\Database\Eloquent\Collection
     {
         return self::with(['items.good', 'items.goodOption', 'user_address'])
         ->where('user_id', $orderId)
         ->get();
     }
 
-    public function updateOrderByAdmin($validated):array
+    public function updateOrderByAdmin($validated): array
     {
         $updateData = [];
 
@@ -102,7 +104,7 @@ class Order extends Model
         return $updateData;
     }
 
-    public static function deleteOrdersItem($order)
+    public static function deleteOrdersItem($order): bool
     {
         return OrderItem::where('order_id', $order->id)->delete();
     }
@@ -158,7 +160,5 @@ class Order extends Model
             $totalAmount += $totalPrice;
         }
     }
-
-
 
 }

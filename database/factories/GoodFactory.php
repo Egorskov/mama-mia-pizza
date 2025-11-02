@@ -24,4 +24,5 @@ class GoodFactory extends Factory
             'category' => fake()->randomElement(['pizza', 'drink']),
         ];
     }
+
 }

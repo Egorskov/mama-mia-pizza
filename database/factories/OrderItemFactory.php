@@ -36,4 +36,5 @@ class OrderItemFactory extends Factory
             'total_price' => ($basePrice + $optionPrice) * $quantity
         ];
     }
+
 }

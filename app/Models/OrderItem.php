@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
@@ -29,26 +30,17 @@ class OrderItem extends Model
         'total_price' => 0
     ];
 
-    protected static function booted()
-    {
-        static::creating(function ($item) {
-            $item->base_price = $item->good->price;
-            $item->option_price = $item->goodOption ? $item->goodOption->price : 0;
-            $item->total_price = ($item->base_price + $item->option_price) * $item->quantity;
-        });
-    }
-
-    public function good()
+    public function good(): BelongsTo
     {
         return $this->belongsTo(Good::class);
     }
 
-    public function order()
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }
 
-    public function goodOption()
+    public function goodOption(): BelongsTo
     {
         return $this->belongsTo(GoodOption::class, 'good_option_id');
     }

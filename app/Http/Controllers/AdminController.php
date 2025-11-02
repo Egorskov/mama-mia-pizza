@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\OrderController;
 
@@ -17,7 +18,7 @@ class AdminController extends Controller
             'adminIndex', 'adminOrder', 'adminId', 'adminUpdate']);
     }
 
-    public function adminIndex()
+    public function adminIndex(): JsonResponse
     {
         $orders = Order::getAllOrdersAllUsers();
         return response()->json($orders, 200);
@@ -26,7 +27,7 @@ class AdminController extends Controller
     /**
      *  Просмотр любого заказа по номеру админом
      */
-    public function adminOrder(Order $order)
+    public function adminOrder(Order $order): JsonResponse
     {
         $order = Order::getOrdersWithId($order);
         return response()->json($order, 200);
@@ -36,7 +37,7 @@ class AdminController extends Controller
      *  Просмотр заказов любого пользователя админом
      */
 
-    public function adminId($orderId)
+    public function adminId($orderId): JsonResponse
     {
         $order = Order::getOrderById($orderId);
         return response()->json($order, 200);
@@ -46,7 +47,7 @@ class AdminController extends Controller
      * пользователю нельзя обновлять заказ, только через админа
      */
 
-    public function adminUpdate(UpdateOrderRequest $request, Order $order)
+    public function adminUpdate(UpdateOrderRequest $request, Order $order): JsonResponse
     {
         $validated = $request->validated();
 

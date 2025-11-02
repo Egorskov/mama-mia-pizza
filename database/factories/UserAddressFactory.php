@@ -26,10 +26,4 @@ class UserAddressFactory extends Factory
         ];
     }
 
-    //public function configure()
-    //
-    //   return $this->afterCreating(function (User $user) {
-    //       UserAddress::factory()->count(rand(1,3))->create(['user_id'=>$user->id]);
-    //   });
-    //
 }

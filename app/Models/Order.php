@@ -18,6 +18,18 @@ class Order extends Model
         'delivery_status'
     ];
 
+    protected $appends = ['user_email', 'total_price'];
+
+    public function getUserEmailAttribute(): ?string
+    {
+        return $this->user?->email;
+    }
+
+    public function getTotalPriceAttribute(): float
+    {
+        $this->loadMissing('items');
+        return $this->items->sum('total_price');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

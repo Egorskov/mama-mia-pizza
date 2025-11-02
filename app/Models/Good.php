@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Tymon\JWTAuth\Providers\Auth\Illuminate;
 
 class Good extends Model
@@ -12,6 +13,10 @@ class Good extends Model
     use HasFactory;
 
     public $timestamps = false;
+    /**
+     * @var \Illuminate\Support\HigherOrderCollectionProxy|int|mixed
+     */
+    public mixed $views_count;
 
     protected $fillable = [
         'name',
@@ -37,22 +42,38 @@ class Good extends Model
 
     public static function getAllGoods(): \Illuminate\Database\Eloquent\Collection
     {
-        return self::all();
+        return Cache::remember('goods', 3600, function () {
+            return self::all();
+        });
     }
 
     public static function createGood(array $data): Good
     {
-        return self::create($data);
+        $good = self::create($data);
+        self::invalidateCached();
+        return $good;
     }
 
     public function updateGood($data): bool
     {
-        return $this->update($data);
+        $this->update($data);
+        self::invalidateCached($this->id);
+        return true;
     }
 
     public function deleteGood(): bool
     {
-        return $this->delete();
+        $this->delete();
+        self::invalidateCached($this->id);
+        return true;
+    }
+
+    private static function invalidateCached($id = null): void
+    {
+        Cache::forget('goods:all');
+        if ($id) {
+            Cache::forget('goods:' . $id);
+        }
     }
 
     public static function validateUpdateGood($data): array

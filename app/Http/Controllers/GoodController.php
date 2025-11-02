@@ -7,7 +7,7 @@ use App\Http\Requests\CreateGoodRequest;
 use App\Models\Good;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redis;
 
 class GoodController extends Controller
 {
@@ -21,7 +21,8 @@ class GoodController extends Controller
      */
     public function index(): JsonResponse
     {
-        $goods = Good::getAllGoods();
+
+        $goods = Good::paginate(10);
         return response()->json($goods);
     }
 
@@ -33,31 +34,37 @@ class GoodController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResponse
+    public function show(Good $good): JsonResponse
     {
-        return response()->json(Good::findOrFail($id));
+        $redisKey = "views:good:{$good->id}";
+        $userKey = "viewed:{$good->id}:" . request()->ip();
+        if (!Redis::exists($userKey)) {
+            Redis::setex($userKey, 3600, true);
+            $newViewsCount = Redis::incr($redisKey);
+        } else {
+            $newViewsCount = Redis::get($redisKey);
+        }
+        $good->setAttribute('views_count', (int) $newViewsCount);
+        $good->makeVisible('views_count');
+        return response()->json($good);
     }
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, Good $good): JsonResponse
     {
-        $good = Good::findOrFail($id);
         $data = Good::validateUpdateGood($request);
         $good -> updateGood($data);
         return response()->json($good, 200);
-
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(Good $good): JsonResponse
     {
-        $good = Good::findOrFail($id);
         $good->deleteGood();
 
         return response()->json(['message' => 'Deleted successfully'], 200);
     }
-
 }

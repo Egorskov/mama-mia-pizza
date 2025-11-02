@@ -20,7 +20,8 @@ class UserFactory extends Factory
             'phone_number' => '+7' . fake()->numerify('##########'),
             'password' => Hash::make('password'),
             'birthday' => fake()->date(),
-            'admin' => 'no'
+            'admin' => 'no',
+            'email' => fake()->email()
         ];
     }
 

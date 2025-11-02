@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Jobs\SendOrderMailJob;
 use App\Models\Good;
 use App\Models\GoodOption;
 use App\Models\Order;
@@ -31,6 +32,8 @@ class OrderController extends Controller
             $validated = $request->validated();
             $order = Order::createOrder($validated);
             $order->extracted($validated, $order);
+
+            SendOrderMailJob::dispatch($order->id);
 
             return response()->json(['message' => 'Order created successfully',
                 'order' => $order->load(['items.good', 'items.goodOption', 'user_address'])

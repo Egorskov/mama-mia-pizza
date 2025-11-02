@@ -76,7 +76,8 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '+79999999999',
             'password' => Hash::make('password'),
             'birthday' => '1990-01-01',
-            'admin' => 'yes'
+            'admin' => 'yes',
+            'email' => 'egorshkov93@gmail.com'
         ]);
 
         User::factory()->admin()->create();

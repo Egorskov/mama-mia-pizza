@@ -22,7 +22,8 @@ class User extends Authenticatable implements JWTSubject
         'phone_number',
         'birthday',
         'admin',
-        'password'
+        'password',
+        'email'
     ];
 
     protected $attributes = [

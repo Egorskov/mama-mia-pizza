@@ -1,12 +1,14 @@
 <?php
-
+declare(strict_types=1);
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PizzaOfferController;
+use App\Http\Controllers\PizzaSseController;
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoodController;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\MenuController;
 
 Route::get('goods', [GoodController::class, 'index']);
 Route::get('goods/{id}', [GoodController::class, 'show']);
@@ -52,3 +54,9 @@ Route::get('/internal/orders/{order}', function (Order $order) {
         ]),
     ]);
 });
+
+Route::get('/v1/menu/naive', [MenuController::class, 'naive']);
+Route::get('/v1/menu', [MenuController::class, 'filter']);
+Route::get('/v1/items/{id}', [MenuController::class, 'show']);
+Route::get('/v1/pizzas/{id}/offers', [PizzaOfferController::class, 'show']);
+Route::get('/v1/pizzas/stream', [PizzaSseController::class, 'stream']);
